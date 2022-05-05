@@ -1,0 +1,25 @@
+*{
+    font-family: 'Prompt', sans-serif;
+    box-sizing: border-box;
+    font-size: 18px;
+  }
+  
+  .imgAvatar{
+    border-radius: 50%
+  }
+
+  /*Layout*/
+  .lo-row{
+    display: flex;
+  }
+  .lo-col{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sm-font{
+    font-size: 18px;
+  }
+  p{
+    font-size: 18px;
+  }

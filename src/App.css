@@ -1,0 +1,9 @@
+*{
+  font-family: 'Roboto', 'Prompt', sans-serif;
+  box-sizing: border-box;
+  font-size: 30px;
+}
+
+.imgAvatar{
+  border-radius: 50%
+}
