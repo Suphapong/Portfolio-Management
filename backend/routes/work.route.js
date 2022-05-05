@@ -19,27 +19,71 @@ const storage = multer.diskStorage({
   
 //upload parameters for multer
 let  upload = multer({ storage: storage })
+let  multipleUploads = upload.fields([
+    {name: 'imageCover'}, 
+    {name: 'moreImage', maxCount: 5},
+    {name: 'pdf', maxCount: 1}
+])
 
 //Work Model
 let  workSchema = require('../models/Work')
 
-//Create Work
-router.post('/create-work', upload.single('imageCover'), (req, res) => {
-    console.log("reqCreate",req.body);
-    const newWork = new workSchema({
-        workname: req.body.workname,
-        membertype: req.body.membertype,
-        feature: req.body.feature,
-        imageCover: req.file.originalname,
-        subject: req.body.subject
-    });
-    console.log("newWork",newWork);
-    console.log("newWorkXX",req.body);
+//Create work upload.single('imageCover')
+router.post('/create-work', multipleUploads , (req, res) => {
+    if (req.files) {
+        console.log("reqFilesXXX",req.files);
+        console.log("reqFiles",req.files.imageCover[0].originalname);
+        let fileopt = req.body.fileOption;
 
-    newWork
-    .save()
-    .then(() => res.json("New Work Created!"))
-    .catch((error) => res.status(400).json("Error: ",error));
+        if (fileopt == "moreimage") {
+            const newWork = new workSchema({
+                workname: req.body.workname,
+                membertype: req.body.membertype,
+                feature: req.body.feature,
+                imageCover: req.files.imageCover[0].originalname,
+                subject: req.body.subject,
+                description: req.body.description,
+                fileOption: req.body.fileOption,
+                moreImage: req.files.moreImage[0].originalname,
+                pdf: req.files.pdf[0].originalname
+            });
+            newWork
+            .save()
+            .then(() => res.json("New Work Created!"))
+            .catch((error) => res.status(400).json("Error: ",error));
+        }else if (fileopt == "pdf") {
+            const newWork = new workSchema({
+                workname: req.body.workname,
+                membertype: req.body.membertype,
+                feature: req.body.feature,
+                imageCover: req.files.imageCover[0].originalname,
+                subject: req.body.subject,
+                description: req.body.description,
+                fileOption: req.body.fileOption,
+                pdf: req.files.pdf[0].originalname
+            });
+            newWork
+            .save()
+            .then(() => res.json("New Work Created!"))
+            .catch((error) => res.status(400).json("Error: ",error));
+        }else if (fileopt == "both") {
+            const newWork = new workSchema({
+                workname: req.body.workname,
+                membertype: req.body.membertype,
+                feature: req.body.feature,
+                imageCover: req.files.imageCover[0].originalname,
+                subject: req.body.subject,
+                description: req.body.description,
+                fileOption: req.body.fileOption,
+                moreImage: req.files.moreImage[0].originalname,
+                pdf: req.files.pdf[0].originalname
+            });
+            newWork
+            .save()
+            .then(() => res.json("New Work Created!"))
+            .catch((error) => res.status(400).json("Error: ",error));
+        }
+    }
 })
 
 //Read Work 
@@ -73,7 +117,8 @@ router.put('/update-work/:id', upload.single('imageCover'), (req, res) => {
         work.membertype = req.body.membertype;
         work.feature = req.body.feature;
         work.subject = req.body.subject;
-
+        work.description = req.body.description;
+        work.fileOption = req.body.fileOption;
         if (req.file != undefined) {
             work.imageCover = req.file.originalname
         }

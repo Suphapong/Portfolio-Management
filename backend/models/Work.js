@@ -21,7 +21,24 @@ let workSchema = new Schema({
     subject: {
         type: String,
         required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    fileOption: {
+        type: String,
+        required: true
+    },
+    moreImage: {
+        type: String
+    },
+    pdf: {
+        type: String
     }
+
+
+
 },  {
     collection: "works"
 })
