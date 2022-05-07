@@ -110,17 +110,32 @@ router.route('/edit-work/:id').get((req, res) => {
 })
 
 // Update work
-router.put('/update-work/:id', upload.single('imageCover'), (req, res) => {
+router.put('/update-work/:id', multipleUploads, (req, res) => {
+    console.log("YYYYYYYYYYYYYYYYYYYYYY");  
+    console.log("XXXXXXXXXXXXXXXXXXXx",req.files);  
     workSchema.findById(req.params.id)
     .then((work) => {
+        let fileopt = req.body.fileOption;
+        let editFiles = req.body.editFiles;
         work.workname = req.body.workname;
         work.membertype = req.body.membertype;
         work.feature = req.body.feature;
         work.subject = req.body.subject;
         work.description = req.body.description;
         work.fileOption = req.body.fileOption;
-        if (req.file != undefined) {
-            work.imageCover = req.file.originalname
+        if (req.files != undefined) {
+            if (editFiles == 1) {
+                work.imageCover = req.files.imageCover[0].originalname;
+            }
+
+            if (fileopt == "moreimage" && editFiles == 2) {
+                work.moreImage = req.files.moreImage[0].originalname;
+            }else if (fileopt == "pdf" && editFiles == 2) {
+                work.pdf = req.files.pdf[0].originalname;
+            }else if (fileopt == "both" && editFiles == 2) {
+                work.moreImage = req.files.moreImage[0].originalname;
+                work.pdf = req.files.pdf[0].originalname
+            }
         }
 
         work
@@ -128,7 +143,7 @@ router.put('/update-work/:id', upload.single('imageCover'), (req, res) => {
         .then(() => {res.json("Work Update!")
         console.log("Work updated successfully");
         })
-        .catch((error) => res.status(400).json("Error: ",error));
+        //.catch((error) => res.status(400).json("Error: ",error));
     })
     
 })
